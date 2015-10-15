@@ -135,6 +135,14 @@ function validateRect(x, y, newX, newY, dir) {
             }
         }
     }
+
+    console.log(">>", Math.max(Math.min(x, newX), 0), Math.min(Math.max(x, newX), 19), Math.max(Math.min(y, newY), 0), Math.min(Math.max(y, newY), 19));
+    for (var i = Math.max(Math.min(x, newX), 0); i <= Math.min(Math.max(x, newX), 19); i++) {
+        for (var j = Math.max(Math.min(y, newY), 0); j <= Math.min(Math.max(y, newY), 19); j++) {
+            console.log("setting ", i, j);
+            GRID[i][j] = 1;
+        }
+    }
     return true;
 }
 
@@ -232,6 +240,30 @@ for (var i = 0; i <= 5; i++) {
     }
 }
 
+var VERTICES = [];
 for (var i = 0; i < JOINTS.length; i++) {
-    var x = JOINTS[i];
+    var x = JOINTS[i][0], y = JOINTS[i][1];
+
+    if (GRID[x - 1][y] === undefined && GRID[x - 1][y - 1] === undefined && GRID[x][y - 1] === undefined) {
+        VERTICES.push([x, y]);
+    }
+    if (GRID[x + 1][y] === undefined && GRID[x + 1][y - 1] === undefined && GRID[x][y - 1] === undefined) {
+        VERTICES.push([x + 1, y]);
+    }
+    if (GRID[x - 1][y] === undefined && GRID[x - 1][y + 1] === undefined && GRID[x][y + 1] === undefined) {
+        VERTICES.push([x, y + 1]);
+    }
+    if (GRID[x + 1][y] === undefined && GRID[x + 1][y + 1] === undefined && GRID[x][y + 1] === undefined) {
+        VERTICES.push([x + 1, y + 1]);
+    }
+}
+
+CTX.fillStyle = "blue";
+for (var i = 0; i < VERTICES.length; i++) {
+    var x = VERTICES[i][0], y = VERTICES[i][1];
+
+    CTX.beginPath();
+    CTX.arc(x * 25, y * 25, 5, 0, Math.PI * 2);
+    CTX.closePath();
+    CTX.fill();
 }
