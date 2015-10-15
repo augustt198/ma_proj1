@@ -10,13 +10,21 @@
                 width: 500px;
                 height: 500px;
             }
+
+            #canvas-wrapper {
+                padding: 20px;
+                background-color: gray;
+                width: 500px;
+            }
         </style>
     </head>
     <body>
-        <h1>Art Gallery Problem Generator v0.0.1</h1>
+        <h1>Art Gallery Problem Generator v0.0.2</h1>
+        <div id="canvas-wrapper">
+            <canvas id="draw" width="500" height="500"></canvas>
+        </div>
         <div id="canvas"></div>
-        
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.4/raphael-min.js"></script>
+
         <script src="script.js"></script>
     </body>
 </html>
