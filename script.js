@@ -244,6 +244,7 @@ var VERTICES = [];
 for (var i = 0; i < JOINTS.length; i++) {
     var x = JOINTS[i][0], y = JOINTS[i][1];
 
+    // outer
     if (GRID[x - 1][y] === undefined && GRID[x - 1][y - 1] === undefined && GRID[x][y - 1] === undefined) {
         VERTICES.push([x, y]);
     }
@@ -254,6 +255,20 @@ for (var i = 0; i < JOINTS.length; i++) {
         VERTICES.push([x, y + 1]);
     }
     if (GRID[x + 1][y] === undefined && GRID[x + 1][y + 1] === undefined && GRID[x][y + 1] === undefined) {
+        VERTICES.push([x + 1, y + 1]);
+    }
+
+    // inner
+    if (GRID[x - 1][y] !== undefined && GRID[x - 1][y - 1] === undefined && GRID[x][y - 1] !== undefined) {
+        VERTICES.push([x, y]);
+    }
+    if (GRID[x + 1][y] !== undefined && GRID[x + 1][y - 1] === undefined && GRID[x][y - 1] !== undefined) {
+        VERTICES.push([x + 1, y]);
+    }
+    if (GRID[x - 1][y] !== undefined && GRID[x - 1][y + 1] === undefined && GRID[x][y + 1] !== undefined) {
+        VERTICES.push([x, y + 1]);
+    }
+    if (GRID[x + 1][y] !== undefined && GRID[x + 1][y + 1] === undefined && GRID[x][y + 1] !== undefined) {
         VERTICES.push([x + 1, y + 1]);
     }
 }
