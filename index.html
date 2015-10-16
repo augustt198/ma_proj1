@@ -3,7 +3,14 @@
     <head>
         <title>Art Gallery Problem</title>
 
+        <link href='https://fonts.googleapis.com/css?family=Merriweather:400,700' rel='stylesheet' type='text/css'>
+
         <style>
+            body {
+                font-family: 'Merriweather', serif;
+                text-align: center;
+                background-color: #eee;
+            }
             #canvas {
                 border-style: solid;
                 border-width: 1px;
@@ -11,7 +18,19 @@
                 height: 500px;
             }
 
+            #details {
+                font-size: .9em;
+            }
+
+            #feedback {
+                font-weight: 500;
+            }
+            .feedback-item {
+                font-size: 1.5em;
+            }
+
             #canvas-wrapper {
+                margin: 0 auto;
                 padding: 20px;
                 background-color: gray;
                 width: 500px;
@@ -19,9 +38,23 @@
         </style>
     </head>
     <body>
-        <h1>Art Gallery Problem Generator v0.0.2</h1>
+        <h1>Art Gallery Problem Generator <code>v0.0.3</code></h1>
+            Station a guard at a vertex by clicking the black dot
+            (<a href="javascript:window.location.reload()">Reload</a>)
+        <br><br>
+
         <div id="canvas-wrapper">
             <canvas id="draw" width="500" height="500"></canvas>
+        </div>
+        <h2 id="feedback">
+            You've stationed
+            <b class="feedback-item" id="feedback-used">0</b>
+            guards (maximum
+            <b class="feedback-item" id="feedback-max">n</b>
+            needed)
+        </h2>
+        <div id="details">
+            <a href="https://github.com/augustt198/ma_proj1">Source Code</a>
         </div>
 
         <script src="script.js"></script>
