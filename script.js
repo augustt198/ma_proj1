@@ -311,9 +311,36 @@ function highlight(x, y) {
 
     var xOff = x * 25, yOff = y * 25;
 
-    var epsilon = 0.02;
+    var epsilon = 0.002;
     for (var d = -Math.PI / 2 + epsilon; d <= Math.PI / 2 - epsilon; d += 0.002) {
         m = Math.tan(d);
+        var xi = 0, yi = 0;
+        var xf = 500, yf = Math.round(500 * m);
+
+        var dx = Math.abs(xf - xi), sx = xi < xf ? 1 : -1;
+        var dy = Math.abs(yf - yi), sy = yi < yf ? 1 : -1;
+        var err = (dx>dy ? dx : -dy)/2;
+
+        while (true) {
+
+            var idx = 4 * ((yOff + yi) * SIZE + xOff + xi);
+            if ((xOff + xi >= SIZE) || data[idx] == 128) {
+                console.log("HIT!");
+                CTX.beginPath();
+                CTX.moveTo(xOff, yOff);
+                CTX.lineTo(xOff + xi, yOff + yi);
+                CTX.stroke();
+                break;
+            }
+
+
+            if (xi === xf && yi === yf) break;
+            var e2 = err;
+            if (e2 > -dx) { err -= dy; xi += sx; }
+            if (e2 < dy) { err += dx; yi += sy; }
+        }
+
+        /* code graveyard
         for (var x2 = 1; x2 < 500; x2 += 1) {
             var y2 = m * x2;
 
@@ -327,7 +354,8 @@ function highlight(x, y) {
                 CTX.stroke();
                 break;
             }
-        }/*
+        }*/
+        /*
         for (var x2 = -1; x2 > -500; x2--) {
             var y2 = m * x2;
 
@@ -342,6 +370,7 @@ function highlight(x, y) {
                 break;
             //}
         }*/
+        /*
         for (var x2 = 1; x2 > -500; x2 -= 1){
 
             var y2 = -m * x2;
@@ -352,6 +381,7 @@ function highlight(x, y) {
             CTX.lineTo(xOff + x2, yOff + y2);
             CTX.stroke();
             */
+            /*
             var idx = 4 * ((yOff + Math.ceil(y2)) * SIZE + xOff + Math.ceil(x2));
             if ((xOff + x2 >= SIZE || yOff + y2 >= SIZE) || (data[idx] == 128)) {
                 console.log("hit w/ offset ", x2, y2);
