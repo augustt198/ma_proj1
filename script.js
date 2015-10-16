@@ -1,6 +1,7 @@
 var SIZE = 500;
 var CTX = document.getElementById("draw").getContext("2d");
 
+/*
 {
     var ratio = (function () {
         var ctx = CTX,
@@ -19,8 +20,9 @@ var CTX = document.getElementById("draw").getContext("2d");
     canvas.style.height = SIZE + "px";
     CTX.setTransform(ratio, 0, 0, ratio, 0, 0);
 }
+*/
 
-CTX.fillStyle = "white";
+CTX.fillStyle = "black";
 CTX.fillRect(0, 0, SIZE, SIZE);
 
 // direction faux enum
@@ -223,7 +225,7 @@ function drawGrid() {
     }
 }
 
-drawGrid();
+//drawGrid();
 
 function seedWalk() {
     return 3 + Math.floor(Math.random() * (GRID_SIZE - 6));
@@ -274,6 +276,7 @@ for (var i = 0; i < JOINTS.length; i++) {
 }
 
 CTX.fillStyle = "blue";
+/*
 for (var i = 0; i < VERTICES.length; i++) {
     var x = VERTICES[i][0], y = VERTICES[i][1];
 
@@ -281,4 +284,91 @@ for (var i = 0; i < VERTICES.length; i++) {
     CTX.arc(x * 25, y * 25, 5, 0, Math.PI * 2);
     CTX.closePath();
     CTX.fill();
+}
+*/
+
+var colors = ["yellow", "green", "red"]
+var color_idx = 0;
+
+var elem = document.getElementById("draw");
+elem.addEventListener('click', function (e) {
+    var cx = e.offsetX, cy = e.offsetY;
+    console.log("Clicked at", cx, cy);
+    VERTICES.forEach(function (v) {
+        var x = v[0] * 25, y = v[1] * 25;
+        if (Math.pow(x - cx, 2) + Math.pow(y - cy, 2) <= 25) {
+            console.log("Matches vertex!");
+            highlight(v[0], v[1]);
+        }
+    });
+});
+
+function highlight(x, y) {
+    var color = colors[color_idx++ % 3];
+    CTX.strokeStyle = color;
+
+    var data = CTX.getImageData(0, 0, SIZE, SIZE).data;
+
+    var xOff = x * 25, yOff = y * 25;
+
+    var epsilon = 0.02;
+    for (var d = -Math.PI / 2 + epsilon; d <= Math.PI / 2 - epsilon; d += 0.002) {
+        m = Math.tan(d);
+        for (var x2 = 1; x2 < 500; x2 += 1) {
+            var y2 = m * x2;
+
+            var idx = 4 * ((yOff + Math.floor(y2)) * SIZE + xOff + Math.floor(x2));
+            if ((xOff + x2 >= SIZE || yOff + y2 >= SIZE) || (data[idx] == 128)) {
+                CTX.strokeStyle = color;
+                CTX.beginPath();
+                CTX.moveTo(xOff, yOff);
+
+                CTX.lineTo(xOff + Math.floor(x2), yOff + Math.floor(y2));
+                CTX.stroke();
+                break;
+            }
+        }/*
+        for (var x2 = -1; x2 > -500; x2--) {
+            var y2 = m * x2;
+
+            var idx = 4 * ((yOff + Math.floor(y2)) * SIZE + xOff + Math.floor(x2));
+            //if ((xOff + x2 >= SIZE || yOff + y2 >= SIZE) || (data[idx] == 128)) {
+                console.log("ey");
+                CTX.beginPath();
+                CTX.moveTo(xOff, yOff);
+
+                CTX.lineTo(xOff + Math.floor(x2), yOff + Math.floor(y2));
+                CTX.stroke();
+                break;
+            //}
+        }*/
+        for (var x2 = 1; x2 > -500; x2 -= 1){
+
+            var y2 = -m * x2;
+            /*
+            CTX.strokeStyle = "white";
+            CTX.beginPath();
+            CTX.moveTo(xOff, yOff);
+            CTX.lineTo(xOff + x2, yOff + y2);
+            CTX.stroke();
+            */
+            var idx = 4 * ((yOff + Math.ceil(y2)) * SIZE + xOff + Math.ceil(x2));
+            if ((xOff + x2 >= SIZE || yOff + y2 >= SIZE) || (data[idx] == 128)) {
+                console.log("hit w/ offset ", x2, y2);
+                CTX.strokeStyle = color;
+                CTX.beginPath();
+                CTX.moveTo(xOff, yOff);
+
+                CTX.lineTo(xOff + Math.floor(x2), yOff + Math.floor(y2));
+                CTX.stroke();
+                break;
+            }
+        }
+        /*
+        x2 = -500;
+        y2 = m * x2;
+        console.log(y2);
+
+        */
+    }
 }
